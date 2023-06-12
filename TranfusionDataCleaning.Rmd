@@ -1,0 +1,84 @@
+---
+title: "TransfusionDataCleaning"
+author: "Cassie Giovannetti"
+date: "2023-04-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(here)
+```
+
+R (Recency - months since last donation),
+F (Frequency - total number of donation),
+M (Monetary - total blood donated in c.c.),
+T (Time - months since first donation), and
+a binary variable representing whether he/she donated blood in March 2007 (1 stand for donating blood; 0 stands for not donating blood).
+
+
+```{r}
+transfusion <- read.csv(here::here("transfusion.data"), header = TRUE, sep = ",")
+```
+
+
+```{r}
+colnames(transfusion) <- c("Recency", "Frequency", "Monetary", "Time", "Donated_March_2007")
+```
+
+```{r}
+transfusion$Donated_March_2007_label <- ifelse(transfusion$Donated_March_2007 == 1, "Yes", "No")
+```
+
+
+```{r}
+cor(transfusion[,1:4])
+```
+
+We should look at Frequency and Recency, Frequency and Time, Recency and Time. 
+
+```{r}
+plot(x = transfusion$Frequency, y = transfusion$Recency)
+```
+
+```{r}
+plot(x = transfusion$Time, y = transfusion$Frequency)
+```
+
+```{r}
+plot(x = transfusion$Time, y = transfusion$Recency)
+```
+
+```{r}
+ggplot(mapping = aes(x = transfusion$Frequency, fill = transfusion$Donated_March_2007_label)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(mapping = aes(x = transfusion$Time, fill = transfusion$Donated_March_2007_label)) + 
+  geom_boxplot()
+```
+
+
+```{r}
+ggplot(mapping = aes(x = transfusion$Recency, fill = transfusion$Donated_March_2007_label)) + 
+  geom_boxplot()
+```
+
+
+```{r}
+ggplot(mapping = aes(x = transfusion$Frequency, y = transfusion$Time, color = transfusion$Donated_March_2007_label)) + 
+  geom_point()
+```
+
+```{r}
+ggplot(mapping = aes(x = transfusion$Time, y = transfusion$Frequency, color = transfusion$Donated_March_2007_label)) + 
+  geom_point()
+```
+```{r}
+ggplot(mapping = aes(x = transfusion$Recency, y = transfusion$Frequency, color = transfusion$Donated_March_2007_label)) + 
+  geom_point()
+```
+
